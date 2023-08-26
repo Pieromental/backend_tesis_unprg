@@ -17,12 +17,10 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->group(['prefix' => '','middleware' => ['auth.jwt']], function() use($router) {
+$router->group(['prefix' => '', 'middleware' => ['auth.jwt']], function () use ($router) {
     $router->get('/listar-tipousuarios', 'Usuarios\UsuariosController@listarTipoUsuario');
     $router->get('/logout', 'Login\LoginController@logout');
 });
-// $router->get('/listar-tipousuarios', 'Usuarios\UsuariosController@listarTipoUsuario');
+
 $router->post('/registro-usuario', 'Login\LoginController@registroUsuario');
 $router->post('/login', 'Login\LoginController@login');
-
-// $router->get('/listar-tipousuarios', 'Usuarios\UsuariosController@listarTipoUsuario');

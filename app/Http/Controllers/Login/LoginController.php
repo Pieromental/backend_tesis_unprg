@@ -59,7 +59,7 @@ class LoginController extends Controller
                 }
                 return Response::response(code: $results[0]->code, title: $results[0]->titulo, message: $results[0]->clase, data: $token);
             } else {
-                return Response::response(code: 400, message: 'Usuario y/o Contraseña Inválidos');
+                return Response::response(code: 400,title:'Usuario No Encontrado', message: 'Usuario y/o Contraseña Inválidos');
             }
         } catch (GeneralException $e) {
             return Response::error(code: $e->getCode(), message: $e);
