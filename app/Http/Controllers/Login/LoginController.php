@@ -26,10 +26,12 @@ class LoginController extends Controller
     {
         try {
             $idusuario = $request->input('idusuario');
+            $idespecialista = $request->input('idespecialista');
             $jsonPersona = $request->input('jsonPersona');
             $jsonUsuario = $request->input('jsonUsuario');
             $jsonUsuario['password'] = Hash::make($jsonUsuario['password']);
-            $results = DB::select('exec setNuevoUsuario ?,?,?', [$idusuario, json_encode($jsonPersona), json_encode($jsonUsuario)]);
+            $tipo = $request->input('tipo');
+            $results = DB::select('exec setNuevoUsuario ?,?,?,?,?', [$idusuario, $idespecialista, json_encode($jsonPersona), json_encode($jsonUsuario), $tipo]);
             return Response::response(code: $results[0]->code, title: $results[0]->titulo, message: $results[0]->contenido, otherMessage: $results[0]->clase);
         } catch (GeneralException $e) {
             return Response::response(code: $e->getCode(), message: $e);

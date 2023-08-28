@@ -20,6 +20,8 @@ $router->get('/', function () use ($router) {
 $router->group(['prefix' => '', 'middleware' => ['auth.jwt']], function () use ($router) {
     $router->get('/listar-tipousuarios', 'Usuarios\UsuariosController@listarTipoUsuario');
     $router->get('/logout', 'Login\LoginController@logout');
+    $router->get('/listar-usuarios-especialista', 'Terapista\TerapistaController@listarUsuariosxEspecialista');
+    $router->post('/registro-acceso', 'Terapista\TerapistaController@setAccesoUsuario');
 });
 
 $router->post('/registro-usuario', 'Login\LoginController@registroUsuario');
