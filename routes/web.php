@@ -21,6 +21,7 @@ $router->group(['prefix' => '', 'middleware' => ['auth.jwt']], function () use (
     $router->get('/listar-tipousuarios', 'Usuarios\UsuariosController@listarTipoUsuario');
     $router->get('/logout', 'Login\LoginController@logout');
     $router->get('/listar-usuarios-especialista', 'Terapista\TerapistaController@listarUsuariosxEspecialista');
+    $router->get('/list-acceso-usuario', 'Infante\InfanteController@listAccesosUsuario');
     $router->post('/registro-acceso', 'Terapista\TerapistaController@setAccesoUsuario');
 });
 

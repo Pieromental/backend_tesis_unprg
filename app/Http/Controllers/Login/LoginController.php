@@ -59,7 +59,15 @@ class LoginController extends Controller
                     // Generar un token JWT para el usuario
                     $token = array('token' => JWTAuth::fromUser($user));
                 }
-                return Response::response(code: $results[0]->code, title: $results[0]->titulo, message: $results[0]->clase, data: $token);
+
+                $dataEnviar = [];
+
+                array_push($dataEnviar, [
+                    'usuario' => $usuarioData,
+                    'token' => $token
+                ]);
+
+                return Response::response(code: $results[0]->code, title: $results[0]->titulo, message: $results[0]->clase, data: $dataEnviar);
             } else {
                 return Response::response(code: 400,title:'Usuario No Encontrado', message: 'Usuario y/o Contraseña Inválidos');
             }
