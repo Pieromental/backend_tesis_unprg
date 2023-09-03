@@ -28,7 +28,17 @@ class UsuariosController extends Controller
             return Response::response(code: $e->getCode(), message: $e);
         }
     }
-
+    public function listarActividadRecurso(Request $request)
+    {
+        try {
+            $idusuario = $request->input('idusuario');
+            $idactividad = $request->input('idactividad');
+            $results = DB::select('exec listRecursoActividad ?,?', [$idusuario,$idactividad]);
+            return Response::response(code: 200, data: $results);
+        } catch (GeneralException $e) {
+            return Response::response(code: $e->getCode(), message: $e);
+        }
+    }
     public function setActividadRecurso(Request $request)
     {
         try {
