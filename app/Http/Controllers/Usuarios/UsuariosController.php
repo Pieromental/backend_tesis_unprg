@@ -29,5 +29,19 @@ class UsuariosController extends Controller
         }
     }
 
+    public function setActividadRecurso(Request $request)
+    {
+        try {
+            $idusuario = $request->input('idusuario');
+            $idactividad = $request->input('idactividad');
+            $idusuarioPersonalizacion = $request->input('idusuarioPersonalizacion');
+            $recursosJson = $request->input('recursosJson');
+            $results = DB::select('exec setNuevoRecursoActividad ?,?,?,?', [$idusuario,$idactividad, $idusuarioPersonalizacion, json_encode($recursosJson)]);
+            return Response::response(code: $results[0]->code, title: $results[0]->titulo, message: $results[0]->contenido, otherMessage: $results[0]->clase);
+        } catch (GeneralException $e) {
+            return Response::response(code: $e->getCode(), message: $e);
+        }
+    }
+
     //
 }
