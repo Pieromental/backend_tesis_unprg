@@ -40,7 +40,7 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         try {
-            $usuario = $request->input('idusuario');
+            $usuario = $request->input('idUsuario');
             $password = $request->input('password') ? $request->input('password') : '';
 
 
@@ -72,7 +72,8 @@ class LoginController extends Controller
                 return Response::response(code: 400,title:'Usuario No Encontrado', message: 'Usuario y/o Contraseña Inválidos');
             }
         } catch (GeneralException $e) {
-            return Response::error(code: $e->getCode(), message: $e);
+            $functionName = __FUNCTION__;
+            return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
         }
     }
 
@@ -82,7 +83,8 @@ class LoginController extends Controller
             JWTAuth::invalidate(true);
             return Response::response(code: 200, message: 'El usuario cerro sesión exitosamente');
         } catch (\Exception $e) {
-            return Response::error(code: $e->getCode(), message: $e);
+            $functionName = __FUNCTION__;
+            return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
         }
     }
 }

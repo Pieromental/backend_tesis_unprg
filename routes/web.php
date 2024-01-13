@@ -25,7 +25,13 @@ $router->group(['prefix' => '', 'middleware' => ['auth.jwt']], function () use (
     $router->get('/list-actividad-recurso', 'Usuarios\UsuariosController@listarActividadRecurso');
     $router->post('/registro-acceso', 'Terapista\TerapistaController@setAccesoUsuario');
     $router->post('/registro-recurso-actividad', 'Usuarios\UsuariosController@setActividadRecurso');
+    $router->post('/registro-recurso-actividad', 'Usuarios\UsuariosController@setActividadRecurso');
+    
+    // PERMISOS
+    $router->get('/configuraciones-usuario/', 'Permisos\PermisosController@getListPermisos');
+    
+    
 });
 
 $router->post('/registro-usuario', 'Login\LoginController@registroUsuario');
-$router->post('/login', 'Login\LoginController@login');
+$router->post('/login/', 'Login\LoginController@login');

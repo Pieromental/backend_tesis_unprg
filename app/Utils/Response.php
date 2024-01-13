@@ -28,6 +28,7 @@ class Response
     public static function error(
         ?int $code,
         ?string $message,
+        ?string $functionName,
         ?array $data = [],
         ?array $otherData = [],
         ?array $filter = []
@@ -39,6 +40,7 @@ class Response
             "otherData" => $otherData ?? [],
             "filter" => $filter ?? [],
             "message" => $message ?? "Error...",
+            "functionName" => $functionName ?? "",
         ];
     }
 
