@@ -29,6 +29,8 @@ $router->group(['prefix' => '', 'middleware' => ['auth.jwt']], function () use (
     
     // PERMISOS
     $router->get('/configuraciones-usuario/', 'Permisos\PermisosController@getListPermisos');
+    //MENUS
+    $router->get('/menus-list/', 'Permisos\MenusController@getListMenus');
     
     
 });
