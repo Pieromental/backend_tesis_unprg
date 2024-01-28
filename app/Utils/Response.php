@@ -49,19 +49,21 @@ class Response
         ?int $code,
         ?string $title = "",
         ?string $message = "",
+        ?string $messageError = "",
         ?string $otherMessage = "",
+        ?string $functionName = "",
         ?array $data = [],
         ?array $otherData = [],
-        ?array $filter = []
     ): array {
         return [
             "status" => $code == 200,
             "code" => $code ?? 400,
             "data" => $data ?? [],
             "otherData" => $otherData ?? [],
-            "filter" => $filter ?? [],
             "title" => $title ?? "",
-            "message" => $message ?? "",
+            "message" => $message ?? "", 
+            "messageError" => $messageError ?? "", 
+            "functionName" => $functionName ?? "",
             "otherMessage" => $otherMessage ?? "",
         ];
     }
