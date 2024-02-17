@@ -33,7 +33,9 @@ $router->group(['prefix' => '', 'middleware' => ['auth.jwt']], function () use (
     $router->get('/opciones-list-combo/', 'Permisos\MenusController@getListOpcionesCmb');
     $router->get('/menus-list/', 'Permisos\MenusController@getListMenus');
     $router->post('/menus/create/', 'Permisos\MenusController@setMenus');
-    
+    // PERMISOS - USUARIO
+    $router->get('/tipo-usuarios-list-combo/', 'Permisos\UsuariosController@listarComboTipoUsuario');
+    $router->get('/usuarios-list/', 'Permisos\UsuariosController@getListUsuarios');
     
 });
 
