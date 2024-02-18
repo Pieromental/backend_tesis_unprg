@@ -36,6 +36,10 @@ $router->group(['prefix' => '', 'middleware' => ['auth.jwt']], function () use (
     // PERMISOS - USUARIO
     $router->get('/tipo-usuarios-list-combo/', 'Permisos\UsuariosController@listarComboTipoUsuario');
     $router->get('/usuarios-list/', 'Permisos\UsuariosController@getListUsuarios');
+    $router->get('/menus-list-arboles/', 'Permisos\UsuariosController@getListMenusArbol');
+    $router->get('/get-persona/', 'Permisos\UsuariosController@getPersona');
+    $router->post('/persona/create/', 'Permisos\UsuariosController@setPersona');
+    $router->get('/usuario/check/', 'Permisos\UsuariosController@checkUsuario');
     
 });
 
