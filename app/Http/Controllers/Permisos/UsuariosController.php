@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Utils\Table;
 use App\Utils\Response;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Hash;
 
 class UsuariosController extends Controller
 {
@@ -122,4 +123,37 @@ class UsuariosController extends Controller
             return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
         }
     }
+
+    public function getListComboResponsables(Request $request) {
+        try {
+            $data = DB::select('exec getListComboResponsablesUsuario');
+            return Response::response(code:200,data:$data,message:"Listado de Responsables");
+        } catch (GeneralException $e) {
+            $functionName = __FUNCTION__;
+            return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
+        }
+    }
+
+    public function setUsuarioPermisos(Request $request)
+    {
+        try {
+            $idPersona = $request->input('idPersona');
+            $idUsuario = $request->input('idUsuario');
+            $idUsuarioLogueado = $request->input('idUsuarioLogueado');
+            $idTipoUsuario = json_encode($request->input('idTipoUsuario'));
+            $urlPerfil = null;
+            $correo = $request->input('correo');
+            $password = Hash::make($request->input('password'));
+            $responsables = $request->input('responsables');
+            $jsonMenus = json_encode($request->input('jsonMenus'));
+            $jsonJuegos = json_encode($request->input('jsonJuegos'));
+
+            $results = DB::select('exec setUsuarioAndPermisos ?,?,?,?,?,?,?,?,?,?', [$idPersona, $idUsuario, $idUsuarioLogueado, $idTipoUsuario, $urlPerfil, $correo,
+                $password, $responsables, $jsonMenus, $jsonJuegos]);
+            return Response::response(code: $results[0]->code, title: $results[0]->title, message: $results[0]->message, otherMessage: $results[0]->message_error);
+        } catch (GeneralException $e) {
+            return Response::response(code: $e->getCode(), message: $e);
+        }
+    }
+
 }
