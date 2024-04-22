@@ -156,4 +156,20 @@ class UsuariosController extends Controller
         }
     }
 
+    public function getPermisosUsuario(Request $request) {
+        try {
+            $idUsuario = $request->input('idUsuario');
+            $data = DB::select('exec WebGetPermisosUsuario ?', [$idUsuario]);
+            $data[0]->listaTipoUsuario = json_decode($data[0]->listaTipoUsuario);
+            $data[0]->listaResponsables = json_decode($data[0]->listaResponsables);
+            $data[0]->menusSeleccionados = json_decode($data[0]->menusSeleccionados);
+            $data[0]->juegosSeleccionados = json_decode($data[0]->juegosSeleccionados);
+            return Response::response(code:200,data:$data,message:"Listado de Permisos de un Usuario");
+        } catch (GeneralException $e) {
+            $functionName = __FUNCTION__;
+            return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
+        }
+    }
+
 }
+
