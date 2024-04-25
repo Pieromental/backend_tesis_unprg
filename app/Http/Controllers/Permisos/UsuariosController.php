@@ -171,5 +171,25 @@ class UsuariosController extends Controller
         }
     }
 
+    public function updUsuarioPermisos(Request $request)
+    {
+        try {
+            $idUsuario = $request->input('idUsuario');
+            $idUsuarioLogueado = $request->input('idUsuarioLogueado');
+            $idTipoUsuario = json_encode($request->input('idTipoUsuario'));
+            $urlPerfil = null;
+            $correo = $request->input('correo');
+            $responsables = $request->input('responsables');
+            $jsonMenus = json_encode($request->input('jsonMenus'));
+            $jsonJuegos = json_encode($request->input('jsonJuegos'));
+
+            $results = DB::select('exec updUsuarioAndPermisos ?,?,?,?,?,?,?,?', [$idUsuario, $idUsuarioLogueado, $idTipoUsuario, $urlPerfil, $correo,
+                $responsables, $jsonMenus, $jsonJuegos]);
+            return Response::response(code: $results[0]->code, title: $results[0]->title, message: $results[0]->message, otherMessage: $results[0]->message_error);
+        } catch (GeneralException $e) {
+            return Response::response(code: $e->getCode(), message: $e);
+        }
+    }
+
 }
 

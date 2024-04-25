@@ -43,7 +43,7 @@ $router->group(['prefix' => '', 'middleware' => ['auth.jwt']], function () use (
     $router->get('/responsables-list-combo/', 'Permisos\UsuariosController@getListComboResponsables');
     $router->post('/usuario/set/', 'Permisos\UsuariosController@setUsuarioPermisos');
     $router->get('/usuario-permiso/get/', 'Permisos\UsuariosController@getPermisosUsuario');
-    
+    $router->put('/usuario/upd/', 'Permisos\UsuariosController@updUsuarioPermisos');
 });
 
 $router->post('/registro-usuario', 'Login\LoginController@registroUsuario');
