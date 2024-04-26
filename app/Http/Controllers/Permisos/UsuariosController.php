@@ -52,6 +52,7 @@ class UsuariosController extends Controller
             $arr = [];
             array_push($arr, $tree);
             array_push($arr, json_decode($data[0]->menusMobil));
+            array_push($arr, json_decode($data[0]->menusWeb));
             // dd($arr);
             return Response::response(code:200,data:$arr,message:"Listado de Menus para Arbol");
         } catch (GeneralException $e) {
