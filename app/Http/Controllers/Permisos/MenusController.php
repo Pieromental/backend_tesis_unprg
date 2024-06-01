@@ -168,4 +168,36 @@ class MenusController extends Controller
         }
         return $tree;
     }
+
+    public function updateMenus(Request $request)
+    {
+        try {
+
+            $menu = $request->input('menuEdit');
+
+            $menu_insertar = [];
+            $menu_actualizar = [];
+
+            foreach ($menu as $v) {
+                if ($v !== null && isset($v['esNuevo'])) {
+                    if ($v['esNuevo']) {
+                        $menu_insertar[] = $v;
+                    } else {
+                        $menu_actualizar[] = $v;
+                    }
+                }
+            }
+
+            $data = DB::select('exec WebUpdMenuPorSubproducto ?, ?', [json_encode($menu_insertar), json_encode($menu_actualizar)]);
+            return Response::response(code: $data[0]->code, title: $data[0]->title, message: $data[0]->message, messageError: $data[0]->message_error);
+        } catch (\Exception $e) {
+            $function_name = __FUNCTION__;
+            return response()->json([
+                'code' => 500,
+                'title' => 'Error',
+                'message' => $e->getMessage(),
+                'function_name' => $function_name
+            ]);
+        }
+    }
 }
