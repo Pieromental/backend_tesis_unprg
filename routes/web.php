@@ -46,6 +46,10 @@ $router->group(['prefix' => '', 'middleware' => ['auth.jwt']], function () use (
     $router->post('/usuario/set/', 'Permisos\UsuariosController@setUsuarioPermisos');
     $router->get('/usuario-permiso/get/', 'Permisos\UsuariosController@getPermisosUsuario');
     $router->put('/usuario/upd/', 'Permisos\UsuariosController@updUsuarioPermisos');
+    //JUEGOS
+    $router->get('/juegos-list/', 'Juegos\JuegosController@getListJuegos');
+    $router->post('/juegos/create/', 'Juegos\JuegosController@setJuegos');
+
 });
 
 $router->post('/registro-usuario', 'Login\LoginController@registroUsuario');
