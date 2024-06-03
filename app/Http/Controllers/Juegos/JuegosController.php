@@ -52,4 +52,19 @@ class JuegosController extends Controller
             ]);
         }
     }
+
+    public function getListRecursosJuegos(Request $request)
+    {
+        try {
+            $id_usuario = $request->input('idUsuario');
+            $id_actividad = $request->input('idActividad');
+            $data = DB::select('exec getListRecursoPorActividad ?, ?', [$id_usuario, $id_actividad]);
+
+            return Response::response(code: 200, data: $data, message: "Listado de Recursos por juego");
+        } catch (GeneralException $e) {
+            $functionName = __FUNCTION__;
+            return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
+        }
+    }
+
 }
