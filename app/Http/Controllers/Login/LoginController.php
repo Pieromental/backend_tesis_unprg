@@ -76,6 +76,31 @@ class LoginController extends Controller
             return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
         }
     }
+    public function loginMobile(Request $request)
+    {
+        try {
+
+            $usuario = $request->input('idUsuario');
+            $password = $request->input('password') ? $request->input('password') : '';
+
+            $storedPasswordHash = DB::table('usuario')
+                ->where('idusuario', $usuario)
+                ->where('activo', 1)
+                ->value('password');
+            if (Hash::check($password, $storedPasswordHash)) {
+                $results = DB::select('exec MobGetUsuarioMobile ?,?', [$usuario,$storedPasswordHash]);
+   
+                $usuarioData = json_decode($results[0]->contenido)[0];
+               
+                return Response::response(code: $results[0]->code, title: $results[0]->titulo, message: $results[0]->clase, data: [$usuarioData]);
+            } else {
+                return Response::response(code: 400,title:'Usuario No Encontrado', message: 'Usuario y/o Contraseña Inválidos');
+            }
+        } catch (GeneralException $e) {
+            $functionName = __FUNCTION__;
+            return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
+        }
+    }
 
     public function logout(Request $request)
     {
