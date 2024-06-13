@@ -94,7 +94,7 @@ class LoginController extends Controller
                
                 return Response::response(code: $results[0]->code, title: $results[0]->titulo, message: $results[0]->clase, data: [$usuarioData]);
             } else {
-                return Response::response(code: 400,title:'Usuario No Encontrado', message: 'Usuario y/o Contraseña Inválidos');
+                return Response::response(code: 300,title:'Usuario No Encontrado', message: 'Usuario y/o Contraseña Inválidos');
             }
         } catch (GeneralException $e) {
             $functionName = __FUNCTION__;
