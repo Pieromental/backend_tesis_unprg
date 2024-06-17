@@ -79,26 +79,67 @@ class LoginController extends Controller
     public function loginMobile(Request $request)
     {
         try {
-
             $usuario = $request->input('idUsuario');
             $password = $request->input('password') ? $request->input('password') : '';
-
+    
             $storedPasswordHash = DB::table('usuario')
                 ->where('idusuario', $usuario)
                 ->where('activo', 1)
                 ->value('password');
+    
             if (Hash::check($password, $storedPasswordHash)) {
-                $results = DB::select('exec MobGetUsuarioMobile ?,?', [$usuario,$storedPasswordHash]);
-   
-                $usuarioData = json_decode($results[0]->contenido)[0];
-               
-                return Response::response(code: $results[0]->code, title: $results[0]->titulo, message: $results[0]->clase, data: [$usuarioData]);
+                $results = DB::select('exec MobGetUsuarioMobile ?, ?', [$usuario, $storedPasswordHash]);
+    
+                // Decodificar el JSON con true para obtener un array asociativo
+                $usuarioData = json_decode($results[0]->contenido, true);
+    
+                 //dd($usuarioData); // Para depuración, puedes eliminar esta línea después
+    
+                $dataEnviar = [];
+    
+                // Corrigiendo la construcción del array
+                array_push($dataEnviar, [
+                    'usuario' => [
+                        'IdUsuario' => $usuarioData[0]['idusuario'],
+                        'Email' => $usuarioData[0]['email'],
+                        'Password' => $usuarioData[0]['password'],
+                    ],
+                    'persona'=>[
+                        'IdPersona'=> $usuarioData[0]['idPersona'],
+                        'ApPaterno'=> $usuarioData[0]['apPaterno'],
+                        'ApMaterno'=> $usuarioData[0]['apMaterno'],
+                        'Nombres'=> $usuarioData[0]['nombres'],
+                        'NombresAll'=> $usuarioData[0]['nombresAll'],
+                        'NroDocumento'=> $usuarioData[0]['nroDocumento'],
+                        'Sexo'=> $usuarioData[0]['sexo'],
+                        'Celular'=> $usuarioData[0]['celular'],
+                        'Activo'=> $usuarioData[0]['activo'],
+                        'FechaNacimiento'=> $usuarioData[0]['fechaNacimiento']
+                    ]
+                ]);
+                
+                // dd($dataEnviar);
+                return Response::response(
+                    code: $results[0]->code,
+                    title: $results[0]->titulo,
+                    message: $results[0]->clase,
+                    data: $dataEnviar
+
+                );
             } else {
-                return Response::response(code: 300,title:'Usuario No Encontrado', message: 'Usuario y/o Contraseña Inválidos');
+                return Response::response(
+                    code: 300,
+                    title: 'Usuario No Encontrado',
+                    message: 'Usuario y/o Contraseña Inválidos'
+                );
             }
         } catch (GeneralException $e) {
             $functionName = __FUNCTION__;
-            return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
+            return Response::error(
+                code: $e->getCode(),
+                message: $e,
+                functionName: $functionName
+            );
         }
     }
 
