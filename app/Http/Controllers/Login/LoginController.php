@@ -25,13 +25,14 @@ class LoginController extends Controller
     public function registroUsuario(Request $request)
     {
         try {
-            $idusuario = $request->input('idusuario');
-            $idespecialista = $request->input('idespecialista');
+            $idusuario = $request->input('idUsuario');
+            $idespecialista = $request->input('idEspecialista');
             $jsonPersona = $request->input('jsonPersona');
             $jsonUsuario = $request->input('jsonUsuario');
             $jsonUsuario['password'] = Hash::make($jsonUsuario['password']);
             $tipo = $request->input('tipo');
-            $results = DB::select('exec setNuevoUsuario ?,?,?,?,?', [$idusuario, $idespecialista, json_encode($jsonPersona), json_encode($jsonUsuario), $tipo]);
+            $idPersona = $request->input('idPersona');
+            $results = DB::select('exec setNuevoUsuario ?,?,?,?,?,?', [$idusuario, $idespecialista, json_encode($jsonPersona), json_encode($jsonUsuario), $tipo, $idPersona]);
             return Response::response(code: $results[0]->code, title: $results[0]->titulo, message: $results[0]->contenido, otherMessage: $results[0]->clase);
         } catch (GeneralException $e) {
             return Response::response(code: $e->getCode(), message: $e);
