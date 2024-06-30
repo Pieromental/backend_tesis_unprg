@@ -25,7 +25,7 @@ class UsuariosController extends Controller
     public function listarComboTipoUsuario(Request $request)
     {
         try {
-            $results = DB::select('exec WeblisTipoUsuarioCmb', []);
+            $results = DB::select('exec WebLisTipoUsuarioCmb', []);
             return Response::response(code: 200, data: $results);
         } catch (GeneralException $e) {
             return Response::response(code: $e->getCode(), message: $e);
