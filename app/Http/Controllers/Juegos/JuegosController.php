@@ -24,7 +24,7 @@ class JuegosController extends Controller
     {
         try {
             $id_usuario = $request->input('idUsuario');
-            $data = DB::select('exec listJuegos ?', [$id_usuario]);
+            $data = DB::select('exec WebGetListJuegos ?', [$id_usuario]);
             $data = Table::convertTable($data);
             return Response::response(code: 200, data: $data, message: "Listado de Juegos");
         } catch (GeneralException $e) {
@@ -40,7 +40,7 @@ class JuegosController extends Controller
             $id_usuario = $request->input('idUsuario');
             $id_actividad = $request->input('idActividad');
             $recursos = $request->input('recursos');
-            $data = DB::select('exec SetNuevoRecurso ?, ?, ?, ?', [json_encode($recursos), $id_usuario, $id_actividad, $id_usuario_logueado]);
+            $data = DB::select('exec WebSetNuevoRecurso ?, ?, ?, ?', [json_encode($recursos), $id_usuario, $id_actividad, $id_usuario_logueado]);
             return Response::response(code: $data[0]->code, title: $data[0]->title, message: $data[0]->message, messageError: $data[0]->message_error);
         } catch (\Exception $e) {
             $function_name = __FUNCTION__;
@@ -58,7 +58,7 @@ class JuegosController extends Controller
         try {
             $id_usuario = $request->input('idUsuario');
             $id_actividad = $request->input('idActividad');
-            $data = DB::select('exec getListRecursoPorActividad ?, ?', [$id_usuario, $id_actividad]);
+            $data = DB::select('exec WebGetListRecursoPorActividad ?, ?', [$id_usuario, $id_actividad]);
 
             return Response::response(code: 200, data: $data, message: "Listado de Recursos por juego");
         } catch (GeneralException $e) {

@@ -23,7 +23,7 @@ class MenusController extends Controller
     public function getListOpcionesCmb(Request $request)
     {
         try {
-            $data = DB::select('exec listOpcionesCmb');
+            $data = DB::select('exec WebListOpcionesCmb');
             return Response::response(code: 200, data: $data, message: "Listado de Opciones");
         } catch (GeneralException $e) {
             $functionName = __FUNCTION__;
@@ -35,7 +35,7 @@ class MenusController extends Controller
     {
         try {
             $activo = $request->input('activo');
-            $data = DB::select('exec listMenus ?', [$activo]);
+            $data = DB::select('exec WebGetListMenus ?', [$activo]);
             $data = Table::convertTable($data);
             return Response::response(code: 200, data: $data, message: "Listado de Menus");
         } catch (GeneralException $e) {
@@ -75,7 +75,7 @@ class MenusController extends Controller
                 'descripcion' => $arbol_sistema[0]['descripcion']
             ]);
 
-            $data = DB::select('exec SetNuevoMenu ?, ?', [json_encode($array_menu), $id_usuario]);
+            $data = DB::select('exec WebSetMenu ?, ?', [json_encode($array_menu), $id_usuario]);
             return Response::response(code: $data[0]->code, title: $data[0]->title, message: $data[0]->message, messageError: $data[0]->message_error);
         } catch (\Exception $e) {
             $function_name = __FUNCTION__;
@@ -188,7 +188,7 @@ class MenusController extends Controller
                 }
             }
 
-            $data = DB::select('exec WebUpdMenuPorSubproducto ?, ?', [json_encode($menu_insertar), json_encode($menu_actualizar)]);
+            $data = DB::select('exec WebUpdMenu ?, ?', [json_encode($menu_insertar), json_encode($menu_actualizar)]);
             return Response::response(code: $data[0]->code, title: $data[0]->title, message: $data[0]->message, messageError: $data[0]->message_error);
         } catch (\Exception $e) {
             $function_name = __FUNCTION__;
