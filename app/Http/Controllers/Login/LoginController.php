@@ -103,14 +103,14 @@ class LoginController extends Controller
         }
     }
 
-    public function logout(Request $request)
-    {
-        try {
-            JWTAuth::invalidate(true);
-            return Response::response(code: 200, message: 'El usuario cerro sesión exitosamente');
-        } catch (\Exception $e) {
-            $functionName = __FUNCTION__;
-            return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
-        }
-    }
+    // public function logout(Request $request)
+    // {
+    //     try {
+    //         JWTAuth::invalidate(true);
+    //         return Response::response(code: 200, message: 'El usuario cerro sesión exitosamente');
+    //     } catch (\Exception $e) {
+    //         $functionName = __FUNCTION__;
+    //         return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
+    //     }
+    // }
 }
