@@ -32,7 +32,7 @@ class LoginController extends Controller
             $jsonUsuario['password'] = Hash::make($jsonUsuario['password']);
             $tipo = $request->input('tipo');
             $idPersona = $request->input('idPersona');
-            $results = DB::select('exec setNuevoUsuario ?,?,?,?,?,?', [$idusuario, $idespecialista, json_encode($jsonPersona), json_encode($jsonUsuario), $tipo, $idPersona]);
+            $results = DB::select('exec WebSetNuevoUsuario ?,?,?,?,?,?', [$idusuario, $idespecialista, json_encode($jsonPersona), json_encode($jsonUsuario), $tipo, $idPersona]);
             return Response::response(code: $results[0]->code, title: $results[0]->titulo, message: $results[0]->contenido, otherMessage: $results[0]->clase);
         } catch (GeneralException $e) {
             return Response::response(code: $e->getCode(), message: $e);
@@ -50,7 +50,7 @@ class LoginController extends Controller
                 ->where('activo', 1)
                 ->value('password');
             if (Hash::check($password, $storedPasswordHash)) {
-                $results = DB::select('exec getUsuario ?,?', [$usuario, $storedPasswordHash]);
+                $results = DB::select('exec WebGetUsuario ?,?', [$usuario, $storedPasswordHash]);
                 $token = [];
                 $usuarioData = json_decode($results[0]->contenido)[0];
                 if ($results[0]->code == 200) {
