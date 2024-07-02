@@ -32,7 +32,7 @@ class LoginController extends Controller
             $jsonUsuario['password'] = Hash::make($jsonUsuario['password']);
             $tipo = $request->input('tipo');
             $idPersona = $request->input('idPersona');
-            $results = DB::select('exec setNuevoUsuario ?,?,?,?,?,?', [$idusuario, $idespecialista, json_encode($jsonPersona), json_encode($jsonUsuario), $tipo, $idPersona]);
+            $results = DB::select('exec WebSetNuevoUsuario ?,?,?,?,?,?', [$idusuario, $idespecialista, json_encode($jsonPersona), json_encode($jsonUsuario), $tipo, $idPersona]);
             return Response::response(code: $results[0]->code, title: $results[0]->titulo, message: $results[0]->contenido, otherMessage: $results[0]->clase);
         } catch (GeneralException $e) {
             return Response::response(code: $e->getCode(), message: $e);
@@ -44,31 +44,32 @@ class LoginController extends Controller
             $usuario = $request->input('idUsuario');
             $password = $request->input('password') ? $request->input('password') : '';
 
-
             $storedPasswordHash = DB::table('usuario')
                 ->where('idusuario', $usuario)
                 ->where('activo', 1)
                 ->value('password');
+
+            $dataEnviar = [];
+
             if (Hash::check($password, $storedPasswordHash)) {
-                $results = DB::select('exec getUsuario ?,?', [$usuario, $storedPasswordHash]);
+                $data = DB::select('exec WebGetUsuario ?,?', [$usuario, $storedPasswordHash]);
                 $token = [];
-                $usuarioData = json_decode($results[0]->contenido)[0];
-                if ($results[0]->code == 200) {
+                if ($data[0]->code == 200) {
+                    $usuarioData = json_decode($data[0]->class_response)[0];
                     $user = new User(); // Asegúrate de que tu User implementa JWTSubject
                     $user->idusuario = $usuarioData->idusuario;
 
                     // Generar un token JWT para el usuario
                     $token = array('token' => JWTAuth::fromUser($user));
+
+                    array_push($dataEnviar, [
+                        'usuario' => $usuarioData,
+                        'token' => $token
+                    ]);
                 }
 
-                $dataEnviar = [];
-
-                array_push($dataEnviar, [
-                    'usuario' => $usuarioData,
-                    'token' => $token
-                ]);
-
-                return Response::response(code: $results[0]->code, title: $results[0]->titulo, message: $results[0]->clase, data: $dataEnviar);
+                // return Response::response(code: $results[0]->code, title: $results[0]->titulo, message: $results[0]->clase, data: $dataEnviar);
+                return Response::response(code: $data[0]->code, title: $data[0]->title, message: $data[0]->message, data: $dataEnviar, messageError: $data[0]->message_error);
             } else {
                 return Response::response(code: 400,title:'Usuario No Encontrado', message: 'Usuario y/o Contraseña Inválidos');
             }
@@ -131,14 +132,14 @@ class LoginController extends Controller
         }
     }
 
-    public function logout(Request $request)
-    {
-        try {
-            JWTAuth::invalidate(true);
-            return Response::response(code: 200, message: 'El usuario cerro sesión exitosamente');
-        } catch (\Exception $e) {
-            $functionName = __FUNCTION__;
-            return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
-        }
-    }
+    // public function logout(Request $request)
+    // {
+    //     try {
+    //         JWTAuth::invalidate(true);
+    //         return Response::response(code: 200, message: 'El usuario cerro sesión exitosamente');
+    //     } catch (\Exception $e) {
+    //         $functionName = __FUNCTION__;
+    //         return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
+    //     }
+    // }
 }

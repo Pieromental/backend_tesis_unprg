@@ -25,7 +25,7 @@ class UsuariosController extends Controller
     public function listarComboTipoUsuario(Request $request)
     {
         try {
-            $results = DB::select('exec lisTipoUsuario', []);
+            $results = DB::select('exec WebLisTipoUsuarioCmb', []);
             return Response::response(code: 200, data: $results);
         } catch (GeneralException $e) {
             return Response::response(code: $e->getCode(), message: $e);
@@ -49,7 +49,7 @@ class UsuariosController extends Controller
     public function getListMenusArbol(Request $request)
     {
         try {
-            $data = DB::select('exec listMenusArbol');
+            $data = DB::select('exec WebGetListMenusArbol');
             $tree = $this->buildTree(json_decode($data[0]->menusWeb));
             $arr = [];
             array_push($arr, $tree);
@@ -110,7 +110,7 @@ class UsuariosController extends Controller
             $email = $request->input('email');
             $usuario = $request->input('usuario');
 
-            $data = DB::select('exec setPersona ?, ?, ?, ?, ?, ?, ?, ?, ?', [$nroDocumento, $nombres, $apPaterno, $apMaterno, $fechaNacimiento, $sexo, $celular, $email, $usuario]);
+            $data = DB::select('exec WebSetPersona ?, ?, ?, ?, ?, ?, ?, ?, ?', [$nroDocumento, $nombres, $apPaterno, $apMaterno, $fechaNacimiento, $sexo, $celular, $email, $usuario]);
             return Response::response(code: $data[0]->code, title: $data[0]->title, message: $data[0]->message, messageError: $data[0]->message_error);
         } catch (GeneralException $e) {
             $functionName = __FUNCTION__;
@@ -123,7 +123,7 @@ class UsuariosController extends Controller
         try {
             $usuario = $request->input('idUsuario');
 
-            $data = DB::select('exec chekUsuario ?', [$usuario]);
+            $data = DB::select('exec WebCheckUsuario ?', [$usuario]);
             return Response::response(code: $data[0]->code, title: $data[0]->title, message: $data[0]->message, messageError: $data[0]->message_error);
         } catch (GeneralException $e) {
             $functionName = __FUNCTION__;
@@ -134,8 +134,13 @@ class UsuariosController extends Controller
     public function getListComboResponsables(Request $request)
     {
         try {
+<<<<<<< HEAD
             $data = DB::select('exec getListComboResponsablesUsuario');
             return Response::response(code: 200, data: $data, message: "Listado de Responsables");
+=======
+            $data = DB::select('exec WebGetListResponsablesCmb');
+            return Response::response(code:200,data:$data,message:"Listado de Responsables");
+>>>>>>> 17ae12244fe936090754ff4a2aa2af90c557c174
         } catch (GeneralException $e) {
             $functionName = __FUNCTION__;
             return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
@@ -156,10 +161,15 @@ class UsuariosController extends Controller
             $jsonMenus = json_encode($request->input('jsonMenus'));
             $jsonJuegos = json_encode($request->input('jsonJuegos'));
 
+<<<<<<< HEAD
             $results = DB::select('exec setUsuarioAndPermisos ?,?,?,?,?,?,?,?,?,?', [
                 $idPersona, $idUsuario, $idUsuarioLogueado, $idTipoUsuario, $urlPerfil, $correo,
                 $password, $responsables, $jsonMenus, $jsonJuegos
             ]);
+=======
+            $results = DB::select('exec WebSetUsuarioAndPermisos ?,?,?,?,?,?,?,?,?,?', [$idPersona, $idUsuario, $idUsuarioLogueado, $idTipoUsuario, $urlPerfil, $correo,
+                $password, $responsables, $jsonMenus, $jsonJuegos]);
+>>>>>>> 17ae12244fe936090754ff4a2aa2af90c557c174
             return Response::response(code: $results[0]->code, title: $results[0]->title, message: $results[0]->message, otherMessage: $results[0]->message_error);
         } catch (GeneralException $e) {
             return Response::response(code: $e->getCode(), message: $e);
@@ -194,10 +204,15 @@ class UsuariosController extends Controller
             $jsonMenus = json_encode($request->input('jsonMenus'));
             $jsonJuegos = json_encode($request->input('jsonJuegos'));
 
+<<<<<<< HEAD
             $results = DB::select('exec updUsuarioAndPermisos ?,?,?,?,?,?,?,?', [
                 $idUsuario, $idUsuarioLogueado, $idTipoUsuario, $urlPerfil, $correo,
                 $responsables, $jsonMenus, $jsonJuegos
             ]);
+=======
+            $results = DB::select('exec WebUpdUsuarioAndPermisos ?,?,?,?,?,?,?,?', [$idUsuario, $idUsuarioLogueado, $idTipoUsuario, $urlPerfil, $correo,
+                $responsables, $jsonMenus, $jsonJuegos]);
+>>>>>>> 17ae12244fe936090754ff4a2aa2af90c557c174
             return Response::response(code: $results[0]->code, title: $results[0]->title, message: $results[0]->message, otherMessage: $results[0]->message_error);
         } catch (GeneralException $e) {
             return Response::response(code: $e->getCode(), message: $e);

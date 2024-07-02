@@ -21,7 +21,7 @@ class PermisosController extends Controller
     public function getListPermisos(Request $request) {
         try {
             $idUsuario = $request->input('idUsuario');
-            $data = DB::select('exec listPermisosUsuario ?', [$idUsuario]);
+            $data = DB::select('exec WebGetListPermisosUsuario ?', [$idUsuario]);
             $menu = $this->menusUsuarioRecursivo(json_decode($data[0]->menu));
             if ($data[0]->permisos !== null) {
                 $permisos = explode(',', $data[0]->permisos);
