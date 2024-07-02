@@ -91,35 +91,22 @@ class LoginController extends Controller
             if (Hash::check($password, $storedPasswordHash)) {
                 $results = DB::select('exec MobGetUsuarioMobile ?, ?', [$usuario, $storedPasswordHash]);
     
+             
                 // Decodificar el JSON con true para obtener un array asociativo
-                $usuarioData = json_decode($results[0]->contenido, true);
+                $usuario = json_decode($results[0]->usuario, true)[0];
+                $persona = json_decode($results[0]->persona, true)[0];
     
-                 //dd($usuarioData); // Para depuración, puedes eliminar esta línea después
+                // dd($usuario); // Para depuración, puedes eliminar esta línea después
     
                 $dataEnviar = [];
     
                 // Corrigiendo la construcción del array
                 array_push($dataEnviar, [
-                    'usuario' => [
-                        'IdUsuario' => $usuarioData[0]['idusuario'],
-                        'Email' => $usuarioData[0]['email'],
-                        'Password' => $usuarioData[0]['password'],
-                    ],
-                    'persona'=>[
-                        'IdPersona'=> $usuarioData[0]['idPersona'],
-                        'ApPaterno'=> $usuarioData[0]['apPaterno'],
-                        'ApMaterno'=> $usuarioData[0]['apMaterno'],
-                        'Nombres'=> $usuarioData[0]['nombres'],
-                        'NombresAll'=> $usuarioData[0]['nombresAll'],
-                        'NroDocumento'=> $usuarioData[0]['nroDocumento'],
-                        'Sexo'=> $usuarioData[0]['sexo'],
-                        'Celular'=> $usuarioData[0]['celular'],
-                        'Activo'=> $usuarioData[0]['activo'],
-                        'FechaNacimiento'=> $usuarioData[0]['fechaNacimiento']
-                    ]
+                    'usuario' =>$usuario,
+                    'persona'=>$persona
                 ]);
                 
-                // dd($dataEnviar);
+               
                 return Response::response(
                     code: $results[0]->code,
                     title: $results[0]->titulo,

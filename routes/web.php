@@ -56,3 +56,4 @@ $router->group(['prefix' => '', 'middleware' => ['auth.jwt']], function () use (
 $router->post('/registro-usuario', 'Login\LoginController@registroUsuario');
 $router->post('/login/', 'Login\LoginController@login');
 $router->post('/login-mobile/', 'Login\LoginController@loginMobile');
+$router->get('/config-user-mobile/', 'Permisos\UsuariosController@configUserMobileList');

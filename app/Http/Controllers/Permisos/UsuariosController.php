@@ -32,20 +32,22 @@ class UsuariosController extends Controller
         }
     }
 
-    public function getListUsuarios(Request $request) {
+    public function getListUsuarios(Request $request)
+    {
         try {
             $activo = $request->input('activo');
             $correo = $request->input('correo');
             $data = DB::select('exec WebGetListUsuario ?, ?', [$activo, $correo]);
             $data = Table::convertTable($data);
-            return Response::response(code:200,data:$data,message:"Listado de Usuarios");
+            return Response::response(code: 200, data: $data, message: "Listado de Usuarios");
         } catch (GeneralException $e) {
             $functionName = __FUNCTION__;
             return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
         }
     }
 
-    public function getListMenusArbol(Request $request) {
+    public function getListMenusArbol(Request $request)
+    {
         try {
             $data = DB::select('exec listMenusArbol');
             $tree = $this->buildTree(json_decode($data[0]->menusWeb));
@@ -54,14 +56,15 @@ class UsuariosController extends Controller
             array_push($arr, json_decode($data[0]->menusMobil));
             array_push($arr, json_decode($data[0]->menusWeb));
             // dd($arr);
-            return Response::response(code:200,data:$arr,message:"Listado de Menus para Arbol");
+            return Response::response(code: 200, data: $arr, message: "Listado de Menus para Arbol");
         } catch (GeneralException $e) {
             $functionName = __FUNCTION__;
             return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
         }
     }
 
-    function buildTree($data, $parentId = 0) {
+    function buildTree($data, $parentId = 0)
+    {
         $tree = array();
         // dd($data);
         foreach ($data as $item) {
@@ -73,19 +76,20 @@ class UsuariosController extends Controller
                 $tree[] = $item;
             }
         }
-    
+
         return $tree;
     }
 
-    public function getPersona(Request $request) {
+    public function getPersona(Request $request)
+    {
         try {
             $nroDocumento = $request->input('nroDocumento');
 
             $data = DB::select('exec GenGetTrabajador ?', [$nroDocumento]);
-            if($data){
-                return Response::response(code:200,data:$data,message:"Se Encontro la Persona");
-            } else{
-                return Response::response(code:300,data:$data,message:"No se Encontraron Datos");
+            if ($data) {
+                return Response::response(code: 200, data: $data, message: "Se Encontro la Persona");
+            } else {
+                return Response::response(code: 300, data: $data, message: "No se Encontraron Datos");
             }
         } catch (GeneralException $e) {
             $functionName = __FUNCTION__;
@@ -93,7 +97,8 @@ class UsuariosController extends Controller
         }
     }
 
-    public function setPersona(Request $request) {
+    public function setPersona(Request $request)
+    {
         try {
             $nroDocumento = $request->input('nroDocumento');
             $nombres = $request->input('nombres');
@@ -113,7 +118,8 @@ class UsuariosController extends Controller
         }
     }
 
-    public function checkUsuario(Request $request) {
+    public function checkUsuario(Request $request)
+    {
         try {
             $usuario = $request->input('idUsuario');
 
@@ -125,10 +131,11 @@ class UsuariosController extends Controller
         }
     }
 
-    public function getListComboResponsables(Request $request) {
+    public function getListComboResponsables(Request $request)
+    {
         try {
             $data = DB::select('exec getListComboResponsablesUsuario');
-            return Response::response(code:200,data:$data,message:"Listado de Responsables");
+            return Response::response(code: 200, data: $data, message: "Listado de Responsables");
         } catch (GeneralException $e) {
             $functionName = __FUNCTION__;
             return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
@@ -149,15 +156,18 @@ class UsuariosController extends Controller
             $jsonMenus = json_encode($request->input('jsonMenus'));
             $jsonJuegos = json_encode($request->input('jsonJuegos'));
 
-            $results = DB::select('exec setUsuarioAndPermisos ?,?,?,?,?,?,?,?,?,?', [$idPersona, $idUsuario, $idUsuarioLogueado, $idTipoUsuario, $urlPerfil, $correo,
-                $password, $responsables, $jsonMenus, $jsonJuegos]);
+            $results = DB::select('exec setUsuarioAndPermisos ?,?,?,?,?,?,?,?,?,?', [
+                $idPersona, $idUsuario, $idUsuarioLogueado, $idTipoUsuario, $urlPerfil, $correo,
+                $password, $responsables, $jsonMenus, $jsonJuegos
+            ]);
             return Response::response(code: $results[0]->code, title: $results[0]->title, message: $results[0]->message, otherMessage: $results[0]->message_error);
         } catch (GeneralException $e) {
             return Response::response(code: $e->getCode(), message: $e);
         }
     }
 
-    public function getPermisosUsuario(Request $request) {
+    public function getPermisosUsuario(Request $request)
+    {
         try {
             $idUsuario = $request->input('idUsuario');
             $data = DB::select('exec WebGetPermisosUsuario ?', [$idUsuario]);
@@ -165,7 +175,7 @@ class UsuariosController extends Controller
             $data[0]->listaResponsables = json_decode($data[0]->listaResponsables);
             $data[0]->menusSeleccionados = json_decode($data[0]->menusSeleccionados);
             $data[0]->juegosSeleccionados = json_decode($data[0]->juegosSeleccionados);
-            return Response::response(code:200,data:$data,message:"Listado de Permisos de un Usuario");
+            return Response::response(code: 200, data: $data, message: "Listado de Permisos de un Usuario");
         } catch (GeneralException $e) {
             $functionName = __FUNCTION__;
             return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
@@ -178,19 +188,41 @@ class UsuariosController extends Controller
             $idUsuario = $request->input('idUsuario');
             $idUsuarioLogueado = $request->input('idUsuarioLogueado');
             $idTipoUsuario = json_encode($request->input('idTipoUsuario'));
-            $urlPerfil = null;
+            $urlPerfil = $request->input('urlPerfil');;
             $correo = $request->input('correo');
             $responsables = $request->input('responsables');
             $jsonMenus = json_encode($request->input('jsonMenus'));
             $jsonJuegos = json_encode($request->input('jsonJuegos'));
 
-            $results = DB::select('exec updUsuarioAndPermisos ?,?,?,?,?,?,?,?', [$idUsuario, $idUsuarioLogueado, $idTipoUsuario, $urlPerfil, $correo,
-                $responsables, $jsonMenus, $jsonJuegos]);
+            $results = DB::select('exec updUsuarioAndPermisos ?,?,?,?,?,?,?,?', [
+                $idUsuario, $idUsuarioLogueado, $idTipoUsuario, $urlPerfil, $correo,
+                $responsables, $jsonMenus, $jsonJuegos
+            ]);
             return Response::response(code: $results[0]->code, title: $results[0]->title, message: $results[0]->message, otherMessage: $results[0]->message_error);
         } catch (GeneralException $e) {
             return Response::response(code: $e->getCode(), message: $e);
         }
     }
+    public function configUserMobileList(Request $request)
+    {
 
+        try {
+            $usuario = $request->input('idUsuario');
+            $results = DB::select('exec MobGetConfiguracionesUsuario ?', [$usuario]);
+
+            // Decodificar el JSON con true para obtener un array asociativo
+            $accesos_usuario = json_decode($results[0]->accesos_usuario, true);
+            $dataEnviar = [];
+
+             // Corrigiendo la construcción del array
+             array_push($dataEnviar, [
+                'accesos_usuario' => $accesos_usuario,
+            ]);
+            return Response::response(code: 200, data: $dataEnviar, message: "Listado de Configuraciones Mobile por Usuario");
+        } catch (GeneralException $e) {
+            $functionName = __FUNCTION__;
+            return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
+        }
+
+    }
 }
-
