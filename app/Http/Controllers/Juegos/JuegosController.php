@@ -40,7 +40,8 @@ class JuegosController extends Controller
             $id_usuario = $request->input('idUsuario');
             $id_actividad = $request->input('idActividad');
             $recursos = $request->input('recursos');
-            $data = DB::select('exec WebSetNuevoRecurso ?, ?, ?, ?', [json_encode($recursos), $id_usuario, $id_actividad, $id_usuario_logueado]);
+            $recursos_delete = $request->input('deleteRecursosActividad');
+            $data = DB::select('exec WebSetNuevoRecurso ?, ?, ?, ?, ?', [json_encode($recursos), json_encode($recursos_delete), $id_usuario, $id_actividad, $id_usuario_logueado]);
             return Response::response(code: $data[0]->code, title: $data[0]->title, message: $data[0]->message, messageError: $data[0]->message_error);
         } catch (\Exception $e) {
             $function_name = __FUNCTION__;
