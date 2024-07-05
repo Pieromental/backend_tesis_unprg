@@ -208,11 +208,15 @@ class UsuariosController extends Controller
 
             // Decodificar el JSON con true para obtener un array asociativo
             $accesos_usuario = json_decode($results[0]->accesos_usuario, true);
+            $recursos_actividad = json_decode($results[0]->recursos_actividad, true);
+           $recursos = json_decode($results[0]->recursos, true);
             $dataEnviar = [];
 
              // Corrigiendo la construcción del array
              array_push($dataEnviar, [
                 'accesos_usuario' => $accesos_usuario,
+                'recursos_actividad' => $recursos_actividad,
+                'recursos' => $recursos,
             ]);
             return Response::response(code: 200, data: $dataEnviar, message: "Listado de Configuraciones Mobile por Usuario");
         } catch (GeneralException $e) {
