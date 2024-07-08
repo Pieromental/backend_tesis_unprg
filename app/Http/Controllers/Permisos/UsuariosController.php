@@ -25,7 +25,8 @@ class UsuariosController extends Controller
     public function listarComboTipoUsuario(Request $request)
     {
         try {
-            $results = DB::select('exec WebLisTipoUsuarioCmb', []);
+            $idUsuario = $request->input('idUsuario');
+            $results = DB::select('exec WebLisTipoUsuarioCmb ?', [$idUsuario]);
             return Response::response(code: 200, data: $results);
         } catch (GeneralException $e) {
             return Response::response(code: $e->getCode(), message: $e);
@@ -37,7 +38,8 @@ class UsuariosController extends Controller
         try {
             $activo = $request->input('activo');
             $correo = $request->input('correo');
-            $data = DB::select('exec WebGetListUsuario ?, ?', [$activo, $correo]);
+            $id_usuario = $request->input('idUsuario');
+            $data = DB::select('exec WebGetListUsuario ?, ?, ?', [$activo, $correo, $id_usuario]);
             $data = Table::convertTable($data);
             return Response::response(code: 200, data: $data, message: "Listado de Usuarios");
         } catch (GeneralException $e) {
