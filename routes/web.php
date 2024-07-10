@@ -38,6 +38,9 @@ $router->group(['prefix' => '', 'middleware' => ['auth.jwt']], function () use (
     $router->post('/usuario/set/', 'Permisos\UsuariosController@setUsuarioPermisos');
     $router->get('/usuario-permiso/get/', 'Permisos\UsuariosController@getPermisosUsuario');
     $router->put('/usuario/upd/', 'Permisos\UsuariosController@updUsuarioPermisos');
+    $router->patch('/usuario/update-password/', 'Permisos\UsuariosController@updUsuarioPassword');
+    $router->patch('/usuario/enable/', 'Permisos\UsuariosController@usuarioEnable');
+    $router->patch('/usuario/disable/', 'Permisos\UsuariosController@usuarioDisable');
     //JUEGOS
     $router->get('/juegos-list/', 'Juegos\JuegosController@getListJuegos');
     $router->post('/juegos/create/', 'Juegos\JuegosController@setJuegos');
@@ -49,3 +52,4 @@ $router->post('/registro-usuario', 'Login\LoginController@registroUsuario');
 $router->post('/login/', 'Login\LoginController@login');
 $router->post('/login-mobile/', 'Login\LoginController@loginMobile');
 $router->get('/config-user-mobile/', 'Permisos\UsuariosController@configUserMobileList');
+$router->patch('/usuario/update-password/', 'Permisos\UsuariosController@updUsuarioPassword');

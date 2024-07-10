@@ -136,8 +136,9 @@ class UsuariosController extends Controller
     public function getListComboResponsables(Request $request)
     {
         try {
-            $data = DB::select('exec WebGetListResponsablesCmb');
-            return Response::response(code:200,data:$data,message:"Listado de Responsables");
+            $idusuario = $request->input('idUsuario');
+            $data = DB::select('exec WebGetListResponsablesCmb ?' . [$idusuario]);
+            return Response::response(code: 200, data: $data, message: "Listado de Responsables");
         } catch (GeneralException $e) {
             $functionName = __FUNCTION__;
             return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
@@ -158,8 +159,10 @@ class UsuariosController extends Controller
             $jsonMenus = json_encode($request->input('jsonMenus'));
             $jsonJuegos = json_encode($request->input('jsonJuegos'));
 
-            $results = DB::select('exec WebSetUsuarioAndPermisos ?,?,?,?,?,?,?,?,?,?', [$idPersona, $idUsuario, $idUsuarioLogueado, $idTipoUsuario, $urlPerfil, $correo,
-                $password, $responsables, $jsonMenus, $jsonJuegos]);
+            $results = DB::select('exec WebSetUsuarioAndPermisos ?,?,?,?,?,?,?,?,?,?', [
+                $idPersona, $idUsuario, $idUsuarioLogueado, $idTipoUsuario, $urlPerfil, $correo,
+                $password, $responsables, $jsonMenus, $jsonJuegos
+            ]);
             return Response::response(code: $results[0]->code, title: $results[0]->title, message: $results[0]->message, otherMessage: $results[0]->message_error);
         } catch (GeneralException $e) {
             return Response::response(code: $e->getCode(), message: $e);
@@ -194,16 +197,68 @@ class UsuariosController extends Controller
             $jsonMenus = json_encode($request->input('jsonMenus'));
             $jsonJuegos = json_encode($request->input('jsonJuegos'));
 
-            $results = DB::select('exec WebUpdUsuarioAndPermisos ?,?,?,?,?,?,?,?', [$idUsuario, $idUsuarioLogueado, $idTipoUsuario, $urlPerfil, $correo,
-                $responsables, $jsonMenus, $jsonJuegos]);
+            $results = DB::select('exec WebUpdUsuarioAndPermisos ?,?,?,?,?,?,?,?', [
+                $idUsuario, $idUsuarioLogueado, $idTipoUsuario, $urlPerfil, $correo,
+                $responsables, $jsonMenus, $jsonJuegos
+            ]);
             return Response::response(code: $results[0]->code, title: $results[0]->title, message: $results[0]->message, otherMessage: $results[0]->message_error);
         } catch (GeneralException $e) {
             return Response::response(code: $e->getCode(), message: $e);
         }
     }
+    public function updUsuarioPassword(Request $request)
+    {
+        try {
+            $usuario = $request->input('idUsuario');
+            $newPassword = $request->input('newPassword') ? Hash::make($request->input('newPassword')) : '';
+            $id_usuario_login = $request->input('idUsuarioLogueado');
+
+            $results = DB::select('exec WebUpdUsuarioPassword ?, ?, ?', [
+                $usuario, $newPassword, $id_usuario_login
+            ]);
+
+            return Response::response(code: $results[0]->code, title: $results[0]->title, message: $results[0]->message, otherMessage: $results[0]->message_error);
+        } catch (GeneralException $e) {
+            $functionName = __FUNCTION__;
+            return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
+        }
+    }
+    public function usuarioEnable(Request $request)
+    {
+        try {
+            $usuario = $request->input('idUsuario');
+            $activo = 1;
+            $id_usuario_login = $request->input('idUsuarioLogueado');
+
+            $results = DB::select('exec WebUpdActiveUsuario ?, ?, ?', [
+                $usuario, $activo, $id_usuario_login
+            ]);
+
+            return Response::response(code: $results[0]->code, title: $results[0]->title, message: $results[0]->message, otherMessage: $results[0]->message_error);
+        } catch (GeneralException $e) {
+            $functionName = __FUNCTION__;
+            return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
+        }
+    }
+    public function usuarioDisable(Request $request)
+    {
+        try {
+            $usuario = $request->input('idUsuario');
+            $activo = 0;
+            $id_usuario_login = $request->input('idUsuarioLogueado');
+
+            $results = DB::select('exec WebUpdActiveUsuario ?, ?, ?', [
+                $usuario, $activo, $id_usuario_login
+            ]);
+
+            return Response::response(code: $results[0]->code, title: $results[0]->title, message: $results[0]->message, otherMessage: $results[0]->message_error);
+        } catch (GeneralException $e) {
+            $functionName = __FUNCTION__;
+            return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
+        }
+    }
     public function configUserMobileList(Request $request)
     {
-
         try {
             $usuario = $request->input('idUsuario');
             $results = DB::select('exec MobGetConfiguracionesUsuario ?', [$usuario]);
@@ -211,11 +266,11 @@ class UsuariosController extends Controller
             // Decodificar el JSON con true para obtener un array asociativo
             $accesos_usuario = json_decode($results[0]->accesos_usuario, true);
             $recursos_actividad = json_decode($results[0]->recursos_actividad, true);
-           $recursos = json_decode($results[0]->recursos, true);
+            $recursos = json_decode($results[0]->recursos, true);
             $dataEnviar = [];
 
-             // Corrigiendo la construcción del array
-             array_push($dataEnviar, [
+            // Corrigiendo la construcción del array
+            array_push($dataEnviar, [
                 'accesos_usuario' => $accesos_usuario,
                 'recursos_actividad' => $recursos_actividad,
                 'recursos' => $recursos,
@@ -225,6 +280,5 @@ class UsuariosController extends Controller
             $functionName = __FUNCTION__;
             return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
         }
-
     }
 }
