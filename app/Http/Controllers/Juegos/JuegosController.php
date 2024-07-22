@@ -68,13 +68,16 @@ class JuegosController extends Controller
         }
     }
 
-    public function getListActividades(Request $request)
+    public function getCargaPersonalizacion(Request $request)
     {
         try {
-            $data = DB::select('exec WebGetListMenusArbol');
-            $arr = [];
-            array_push($arr, json_decode($data[0]->menusMobil));
-            return Response::response(code: 200, data: $arr[0], message: "Listado Actividades por Etapa y Categoria");
+            $data = DB::select('exec WebGetListCargaPersonalizacionJuegos');
+            // $arr = [];
+            // array_push($arr, json_decode($data[0]->actividades));
+            // array_push($arr, json_decode($data[0]->etapas));
+            $data[0]->actividades = json_decode($data[0]->actividades);
+            $data[0]->etapas = json_decode($data[0]->etapas);
+            return Response::response(code: 200, data: $data, message: "Listado Actividades por Etapa y Categoria");
         } catch (GeneralException $e) {
             $functionName = __FUNCTION__;
             return Response::error(code: $e->getCode(), message: $e, functionName: $functionName);
