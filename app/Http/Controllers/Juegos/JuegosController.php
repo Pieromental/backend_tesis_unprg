@@ -24,7 +24,8 @@ class JuegosController extends Controller
     {
         try {
             $id_usuario = $request->input('idUsuario');
-            $data = DB::select('exec WebGetListJuegos ?', [$id_usuario]);
+            $id_actividad = $request->input('idActividad');
+            $data = DB::select('exec WebGetListJuegos ?, ?', [$id_usuario, $id_actividad]);
             $data = Table::convertTable($data);
             return Response::response(code: 200, data: $data, message: "Listado de Juegos");
         } catch (GeneralException $e) {
