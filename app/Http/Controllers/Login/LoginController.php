@@ -52,14 +52,13 @@ class LoginController extends Controller
             $dataEnviar = [];
 
             if (Hash::check($password, $storedPasswordHash)) {
+               
                 $data = DB::select('exec WebGetUsuario ?,?', [$usuario, $storedPasswordHash]);
                 $token = [];
                 if ($data[0]->code == 200) {
                     $usuarioData = json_decode($data[0]->class_response)[0];
-                    $user = new User(); // Asegúrate de que tu User implementa JWTSubject
+                    $user = new User(); 
                     $user->idusuario = $usuarioData->idusuario;
-
-                    // Generar un token JWT para el usuario
                     $token = array('token' => JWTAuth::fromUser($user));
 
                     array_push($dataEnviar, [
@@ -67,8 +66,6 @@ class LoginController extends Controller
                         'token' => $token
                     ]);
                 }
-
-                // return Response::response(code: $results[0]->code, title: $results[0]->titulo, message: $results[0]->clase, data: $dataEnviar);
                 return Response::response(code: $data[0]->code, title: $data[0]->title, message: $data[0]->message, data: $dataEnviar, messageError: $data[0]->message_error);
             } else {
                 return Response::response(code: 400,title:'Usuario No Encontrado', message: 'Usuario y/o Contraseña Inválidos');

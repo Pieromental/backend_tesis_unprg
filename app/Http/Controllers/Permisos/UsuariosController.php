@@ -137,7 +137,8 @@ class UsuariosController extends Controller
     {
         try {
             $idusuario = $request->input('idUsuario');
-            $data = DB::select('exec WebGetListResponsablesCmb ?' . [$idusuario]);
+            
+            $data = DB::select('exec WebGetListResponsablesCmb ?' , [$idusuario]);
             return Response::response(code: 200, data: $data, message: "Listado de Responsables");
         } catch (GeneralException $e) {
             $functionName = __FUNCTION__;

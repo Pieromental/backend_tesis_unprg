@@ -45,6 +45,7 @@ $router->group(['prefix' => '', 'middleware' => ['auth.jwt']], function () use (
     $router->get('/juegos-list/', 'Juegos\JuegosController@getListJuegos');
     $router->post('/juegos/create/', 'Juegos\JuegosController@setJuegos');
     $router->get('/recursos-juegos-list/', 'Juegos\JuegosController@getListRecursosJuegos');
+    $router->get('/recursos-juegos-agrupados-list/', 'Juegos\JuegosController@getListRecursosAgrupados');
     $router->get('/carga-personalizacion/', 'Juegos\JuegosController@getCargaPersonalizacion');
 
 });
